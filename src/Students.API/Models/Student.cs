@@ -1,4 +1,6 @@
-﻿namespace Students.API.Models
+﻿using System.Collections.Generic;
+
+namespace Students.API.Models
 {
     public class Student
     {
@@ -30,5 +32,9 @@
         /// но не хотим чтобы два студента были с одинаковыми позывными
         /// </summary>
         public string Slug { get; set; }
+        /// <summary>
+        /// Группы студента
+        /// </summary>
+        public List<Group> Groups { get; set; }
     }
 }
