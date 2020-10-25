@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using DataAccess.EF;
+using System.Collections.Generic;
 
 namespace Students.API.Models
 {
-    public class Group
+    public class Group : IEntity
     {
         /// <summary>
         /// Это поле системное, изменение данного поля не допускается.
@@ -12,6 +13,6 @@ namespace Students.API.Models
         /// Имя группы. (обязательное, максимальная длина 25 символов)
         /// </summary>
         public string Name { get; set; }
-        public List<Student> Students { get; set; }
+        public IList<StudentGroup> StudentGroups { get; set; }
     }
 }
