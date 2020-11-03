@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Students.API.Infrastructure;
-using Students.API.Models;
 using Students.API.Services;
-using Students.API.ViewModels;
 
 namespace Students.API.Controllers
 {
@@ -23,15 +19,7 @@ namespace Students.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync([FromQuery] string name, int? skipCount, int? takeCount, bool isOrderByDescending)
         {
-            //var count = await _groupService.GetGroupsCountByFilterAsync(name);
-            //var groups = await _groupService.GetGroupsByFilterAsync(name, skipCount, takeCount, isOrderByDescending);
-            //var groupsViewModel = new ListViewModel<Group>(skipCount, takeCount, count, groups);
-            
-            var countTask = _groupService.GetGroupsCountByFilterAsync(name);
-            var groupsTask = _groupService.GetGroupsByFilterAsync(name, skipCount, takeCount, isOrderByDescending);
-            await Task.WhenAll(new List<Task>(1) { countTask, groupsTask }).ConfigureAwait(false);
-            var groupsViewModel = new ListViewModel<Group>(skipCount, takeCount, countTask.Result, groupsTask.Result);
-            return Ok(groupsViewModel);
+            return Ok(await _groupService.GetGroupsByFilterAsync(name, skipCount, takeCount, isOrderByDescending));
         }
 
         // GET: api/Groups/5
