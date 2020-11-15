@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Students.API.Services;
 using Students.API.ViewModels;
 
 namespace Students.API.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class GroupsController : ControllerBase
@@ -25,7 +27,9 @@ namespace Students.API.Controllers
 
         // GET: api/Groups/5
         [HttpGet("{id}", Name = "Get")]
-        public async Task<IActionResult> Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             var group = await _groupService.GetGroupByIdAsync(id);
             if (group != null)
@@ -38,11 +42,13 @@ namespace Students.API.Controllers
 
         //POST: api/Groups
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] CreateGroupViewModel group)
         {
             if (ModelState.IsValid)
             {
-                return Ok(await _groupService.CreateGroupAsync(group));
+                return Created(nameof(GetByIdAsync), await _groupService.CreateGroupAsync(group));
             }
             return BadRequest(ModelState);
         }
@@ -63,12 +69,14 @@ namespace Students.API.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             var group = await _groupService.DeleteGroupAsync(id);
             if (group != null)
             {
-                return Ok(group);
+                return NoContent();
             }
 
             return NotFound();

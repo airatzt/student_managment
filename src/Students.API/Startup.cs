@@ -24,6 +24,7 @@ namespace Students.API
         {
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddSwaggerGen();
             services.AddDbContext<StudentsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //services.AddTransient(typeof(IEfRepository), typeof(EfRepository))();
@@ -33,6 +34,12 @@ namespace Students.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Students  API V1");
+            });
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
