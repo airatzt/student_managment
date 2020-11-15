@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -15,6 +14,28 @@ namespace Students.API.Services
         public GroupService(IEfRepository<Group> efRepository)
         {
             _repository = efRepository;
+        }
+
+        public async Task<GroupViewModel> CreateGroupAsync(CreateGroupViewModel createGroupViewModel)
+        {
+            var createdGroup = await _repository.Add(new Group
+            {
+                Name = createGroupViewModel.Name
+            });
+
+            return MapGroupToGroupViewModel(createdGroup);
+        }
+
+        public async Task<GroupViewModel> DeleteGroupAsync(int id)
+        {
+            var group = await _repository.Delete(id);
+            return MapGroupToGroupViewModel(group);
+        }
+
+        public async Task<GroupViewModel> GetGroupByIdAsync(int id)
+        {
+            var group = await _repository.Get(id);
+            return MapGroupToGroupViewModel(group);
         }
 
         public async Task<ListViewModel<GroupViewModel>> GetGroupsByFilterAsync(string name, int? skipCount, int? takeCount, bool isOrderByDescending)
@@ -34,6 +55,16 @@ namespace Students.API.Services
             var groupViewList = groupsList.Select(x => new GroupViewModel(x.Id, x.Name, x.StudentGroups.Count));
             return new ListViewModel<GroupViewModel>(skipCount, takeCount, groupsCount, groupViewList);
 
+        }
+
+        private GroupViewModel MapGroupToGroupViewModel(Group group)
+        {
+            if (group != null)
+            {
+                return new GroupViewModel(group.Id, group.Name, group.StudentGroups != null ? group.StudentGroups.Count : 0);
+            }
+
+            return null;
         }
     }
 }

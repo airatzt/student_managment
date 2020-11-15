@@ -25,7 +25,7 @@ namespace Students.API
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddDbContext<StudentsContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //services.AddTransient(typeof(IEfRepository), typeof(EfRepository))();
             services.AddTransient<IEfRepository<Group>, GroupsRepository>();
             services.AddTransient<IGroupService, GroupService>();

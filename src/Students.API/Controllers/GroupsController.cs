@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Students.API.Services;
+using Students.API.ViewModels;
 
 namespace Students.API.Controllers
 {
@@ -24,29 +25,53 @@ namespace Students.API.Controllers
 
         // GET: api/Groups/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            var group = await _groupService.GetGroupByIdAsync(id);
+            if (group != null)
+            {
+                return Ok(group);
+            }
+
+            return NotFound();
         }
 
-        // POST: api/Groups
-        //[HttpPost]
-        //public void Post([FromBody] Group group)
+        //POST: api/Groups
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CreateGroupViewModel group)
+        {
+            if (ModelState.IsValid)
+            {
+                return Ok(await _groupService.CreateGroupAsync(group));
+            }
+            return BadRequest(ModelState);
+        }
+
+
+
+        //// PATCH: api/Groups/5
+        //[HttpPatch("{id}")]
+        //public async Task<IActionResult> EditGroupName(int id, [FromBody] EditGroupViewModel group)
         //{
-        //    _context.Groups.Add(group);
-        //    _context.SaveChanges();
+        //    if (ModelState.IsValid)
+        //    {
+        //        return Ok(await _groupService.CreateGroupAsync(group));
+        //    }
+        //    return BadRequest(ModelState);
         //}
 
-        // PUT: api/Groups/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var group = await _groupService.DeleteGroupAsync(id);
+            if (group != null)
+            {
+                return Ok(group);
+            }
+
+            return NotFound();
         }
     }
 }
