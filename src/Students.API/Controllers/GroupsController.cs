@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Students.API.Services;
@@ -44,7 +45,7 @@ namespace Students.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] CreateGroupViewModel group)
+        public async Task<IActionResult> PostAsync([FromBody] CreateGroupViewModel group)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +72,7 @@ namespace Students.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             var group = await _groupService.DeleteGroupAsync(id);
             if (group != null)
@@ -80,6 +81,17 @@ namespace Students.API.Controllers
             }
 
             return NotFound();
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> VerifyNameAsync(IList<int> groupsIds)
+        {
+            //if (!_userService.VerifyName(firstName, lastName))
+            //{
+            //    return Json($"A user named {firstName} {lastName} already exists.");
+            //}
+
+            return Ok(true);
         }
     }
 }

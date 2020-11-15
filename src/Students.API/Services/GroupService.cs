@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataAccess.EF;
+using Students.API.Infrastructure.Repositories;
 using Students.API.Models;
 using Students.API.ViewModels;
 
@@ -10,10 +12,10 @@ namespace Students.API.Services
 {
     public class GroupService : IGroupService
     {
-        private readonly IEfRepository<Group> _repository;
-        public GroupService(IEfRepository<Group> efRepository)
+        private readonly IGroupsRepository _repository;
+        public GroupService(IGroupsRepository groupsRepository)
         {
-            _repository = efRepository;
+            _repository = groupsRepository;
         }
 
         public async Task<GroupViewModel> CreateGroupAsync(CreateGroupViewModel createGroupViewModel)
@@ -56,6 +58,13 @@ namespace Students.API.Services
             return new ListViewModel<GroupViewModel>(skipCount, takeCount, groupsCount, groupViewList);
 
         }
+
+        //public async Task<int> IsGroupsNotExistsByIds(IList<int> ids)
+        //{
+        //    Expression<Func<Group, bool>> predicate = x => ids.Contains(x.Id);
+        //    var groups = await _repository.ListAsync(predicate);
+        //    var notExistIds = 
+        //}
 
         private GroupViewModel MapGroupToGroupViewModel(Group group)
         {

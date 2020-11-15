@@ -27,9 +27,10 @@ namespace Students.API
             services.AddSwaggerGen();
             services.AddDbContext<StudentsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddTransient(typeof(IEfRepository), typeof(EfRepository))();
-            services.AddTransient<IEfRepository<Group>, GroupsRepository>();
+            services.AddTransient<IEfRepository<Student>, StudentsRepository>();
+            services.AddTransient<IGroupsRepository, GroupsRepository>();
             services.AddTransient<IGroupService, GroupService>();
+            services.AddTransient<IStudentService, StudentService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
